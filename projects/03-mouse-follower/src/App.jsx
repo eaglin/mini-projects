@@ -1,6 +1,7 @@
 
 import './App.css'
 import { useEffect, useState } from 'react'
+import '/index.css'
 function App() {
 
   const [enabled, setEnable] = useState(false);

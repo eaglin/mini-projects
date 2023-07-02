@@ -1,33 +1,59 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
+import { getRandomFact } from './service/fact'
+function useCatFact() {
+  const [fact, setFact] = useState();
 
+  const getFactAndUpdate = () => {
+    getRandomFact().then(setFact)
+  }
+  useEffect(() => {
+    getFactAndUpdate
+  }, [])
+
+  return { fact, getFactAndUpdate }
+}
 function App() {
-  const [count, setCount] = useState(0)
 
+
+  const baseUrl = "https://cataas.com/cat/says/";
+  const { fact, getFactAndUpdate } = useCatFact()
+  const [url, setUrl] = useState();
+
+
+
+
+
+  useEffect(() => {
+    console.log("ENTRAMOS")
+    if (fact)
+      setUrl(baseUrl + fact.slice(' ', 3));
+  }, [fact])
+
+  const handleClick = async () => {
+
+    getFactAndUpdate()
+  }
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <main style={{
+
+
+        display: 'flex',
+        justifyContent: 'center',
+        alignContent: 'space-between',
+        placeItems: 'center'
+
+      }}>
+        <p>{fact}</p>
+        {url ? <img style={{
+          height: 200, width: 200, alignSelf: 'center', borderRadius: '100%',
+          alignItems: 'center',
+          alignContent: 'center',
+          justifyContent: 'center',
+        }} src={url} /> : <h1>loading...</h1>}
+      </main>
+      <button onClick={handleClick}>Reload</button>
     </>
   )
 }
